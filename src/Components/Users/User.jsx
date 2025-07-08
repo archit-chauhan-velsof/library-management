@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createAvatar } from '@dicebear/core';
 import { initials } from '@dicebear/collection';
 import axios from 'axios';
+import {baseUrl} from '../../config';
 const User = ({ user }) => {
 
     // to create avatar
@@ -28,11 +29,24 @@ const User = ({ user }) => {
 
 
     let handleEdit = () => {
-        axios.patch(`https://jsonplaceholder.typicode.com/users/${user.id}`,{
+        axios.patch(`${baseUrl}users/${user.id}`,{
             name,phone,email,
             company:{name:companyName},
             website
-        }).then((res)=>console.log(res.data)).catch((err)=>console.log(err));
+        }).then((res)=>{
+            setName(res?.data?.name)
+            setPhone(res?.data?.phone)
+            setEmail(res?.data?.email)
+            setCompanyName(res?.data?.company?.name)
+            setWebsite(res?.data?.website)
+            console.log(res.data);
+        }).catch((err)=>console.log(err)).finally(()=> setEdit(false));
+    }
+
+    let handleDelete = () => {
+        axios.delete(`${baseUrl}users/${user.id}`).then((res)=>{
+            console.log(res.status);
+        }).catch((err)=> console.log(err));
     }
 
     if (isLoading) {
@@ -52,16 +66,16 @@ const User = ({ user }) => {
 
             <div className=" col-span-9">
 
-                <div><span className="font-bold">Name : </span>{user?.name || ''}</div>
-                <div><span className="font-bold">Phone : </span>{user?.phone || ''}</div>
-                <div><span className="font-bold">Email : </span>{user?.email || ''}</div>
-                <div><span className="font-bold">Company : </span>{user?.company?.name || ''}</div>
-                <div><span className="font-bold">Website : </span>{user?.website || ''}</div>
-                <div><span className="font-bold">Address : </span>{`${user?.address?.street || ''} , ${user?.address?.city || ''} (${user?.address?.zipcode || ''})`} </div>
+                <div><span className="font-bold">Name : </span>{name || ''}</div>
+                <div><span className="font-bold">Phone : </span>{phone || ''}</div>
+                <div><span className="font-bold">Email : </span>{email || ''}</div>
+                <div><span className="font-bold">Company : </span>{companyName || ''}</div>
+                <div><span className="font-bold">Website : </span>{website || ''}</div>
+                <div><span className="font-bold">Address : </span>{address} </div>
 
             </div>
             <div className='flex flex-col justify-around'>
-                <button className='p-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md' >
+                <button className='p-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md' onClick={() => handleDelete()}>
                     Delete
                 </button>
                 <button className='p-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md' onClick={() => setEdit(true)}>
@@ -73,7 +87,7 @@ const User = ({ user }) => {
         </div>
         )
     }
-    else {
+    else if(edit){
         return (<div className=" w-full grid grid-cols-12 border-b p-3 mb-3 ">
 
             <div className="col-span-2 p-4 rounded">
@@ -98,6 +112,7 @@ const User = ({ user }) => {
         </div>
         )
     }
+    
 
 }
 

@@ -1,15 +1,23 @@
-import React from 'react'
+import {useState} from 'react'
 import { Outlet } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
 import Header from './Components/Header/Header'
 import Footer from './Components/Footer/Footer'
+import Login from './Components/Login'
+import useToken from './custom-hooks/UseToken'
+
+
 
 const App = () => {
+  const {token,setToken,resetToken} = useToken();
+    if(!token){
+        return <Login setToken = {setToken}/>
+    }
   return (
 
     <div className='border h-screen w-full grid grid-cols-24 grid-rows-24 '>
       <header className='col-span-24 row-span-2 border flex justify-center items-center'>
-        <Header/>
+        <Header resetToken={resetToken}/>
       </header>
       <div className='col-span-3 row-span-21 border-r hidden sm:flex flex-col gap-4 py-4 px-1'>
         {/* navbar */}
