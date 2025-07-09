@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import { baseUrl } from '../../config';
+import { axiosInstance, baseUrl } from '../../config';
 import axios from 'axios';
 import User from './User';
 
@@ -18,7 +18,7 @@ const UsersList = () => {
     const [address, setAddress] = useState('');
 
     let handleSubmit = () => {
-        axios.post(`${baseUrl}users`).then((res)=> {
+        axiosInstance.post(`users`).then((res)=> {
             console.log(res.data);
         }).catch((err)=>{
             console.log(err);
@@ -29,7 +29,7 @@ const UsersList = () => {
 
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`${baseUrl}users`).then((res) => {
+        axiosInstance.get(`users`).then((res) => {
             console.log(res.data)
             setUsers(res.data)
         }).catch((err) => console.log(err)).finally(() => {

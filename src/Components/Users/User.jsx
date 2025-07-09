@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createAvatar } from '@dicebear/core';
 import { initials } from '@dicebear/collection';
 import axios from 'axios';
-import {baseUrl} from '../../config';
+import {baseUrl,axiosInstance} from '../../config';
 const User = ({ user }) => {
 
     // to create avatar
@@ -29,7 +29,7 @@ const User = ({ user }) => {
 
 
     let handleEdit = () => {
-        axios.patch(`${baseUrl}users/${user.id}`,{
+        axiosInstance.patch(`users/${user.id}`,{
             name,phone,email,
             company:{name:companyName},
             website
@@ -44,7 +44,7 @@ const User = ({ user }) => {
     }
 
     let handleDelete = () => {
-        axios.delete(`${baseUrl}users/${user.id}`).then((res)=>{
+        axiosInstance.delete(`users/${user.id}`).then((res)=>{
             console.log(res.status);
         }).catch((err)=> console.log(err));
     }

@@ -1,9 +1,9 @@
 import {useState} from 'react'
 import { Outlet } from 'react-router-dom'
 import { NavLink } from 'react-router-dom'
-import Header from './Components/Header/Header'
-import Footer from './Components/Footer/Footer'
-import Login from './Components/Login'
+import Header from './components/Header/Header'
+import Footer from './components/Footer/Footer'
+import Login from './components/Login'
 import useToken from './custom-hooks/UseToken'
 
 

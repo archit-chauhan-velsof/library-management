@@ -1,72 +1,84 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types';
-import * as yup from 'yup';
 import { useFormik } from 'formik';
+import * as yup from 'yup';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
 const Login = ({ setToken }) => {
 
     const loginUser = async (values) => {
-        return fetch('http://localhost:8080/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(values)
-        })
-            .then(data => data.json())
-    }
+        const response = await axios.post('http://localhost:8080/login', values);
+        return response.data;
+    };
 
-    const onSubmit = async() => {
-        console.log('called');
-        // e.preventDefault();
-        const token = await loginUser({
-          values
-        });
-        setToken(token);
-    }
-
-
-    // schema for the formik
-    // const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
-    const basicSchema = yup.object().shape({
-        uName: yup.string().min(2, 'Name is too short').max(50, 'Name is too long').required('Name is required'),
-        password: yup.string().min(5)
-            // .matches(passwordRules, { message: "Please create a stronger password" })
-            .required("Required")
-
-    });
-
-    const {values,errors,touched,isSubmitting,handleBlur,handleChange,handleSubmit,} = useFormik({
+    const formik = useFormik({
         initialValues: {
-            uName:"",
-            password: "",
+            uName: '',
+            password: '',
         },
-        validationSchema: basicSchema,
-        onSubmit,
+        validationSchema: yup.object({
+            uName: yup
+                .string().required('Name is required'),
+            password: yup
+                .string().min(5, 'Password must be at least 5 characters').required('Password is required'),
+        }),
+        onSubmit: async (values, { setSubmitting }) => {
+            try {
+                const token = await loginUser(values);
+                setToken(token);
+            } catch (error) {
+                console.error('Login failed:', error);
+            } finally {
+                setSubmitting(false);
+            }
+        },
     });
 
     return (
-        <form className='flex flex-col w-full h-screen justify-center items-center gap-4' onSubmit={handleSubmit}>
+        <form
+            className='flex flex-col w-full h-screen justify-center items-center gap-4'
+            onSubmit={formik.handleSubmit}
+        >
             <label>
                 <p>Username</p>
-                <input type="text" className='border rounded-md' onChange={handleChange} value={values.uName} onBlur={handleBlur} id='uName'/>
-                {errors?.uName && touched?.uName && (<p className='font-sm text-red-500'>{errors.uName}</p>)}
+                <input
+                    type="text"
+                    className='border rounded-md'
+                    id='uName'
+                    {...formik.getFieldProps('uName')}
+                />
+                {formik.touched.uName && formik.errors.uName && (
+                    <p className='text-red-500'>{formik.errors.uName}</p>
+                )}
             </label>
+
             <label>
                 <p>Password</p>
-                <input type="password" className='border rounded-md' onChange={handleChange} value={values.password} onBlur={handleBlur} id='password'/>
-                {errors?.password && touched?.password && (<p className='font-sm text-red-500'>{errors.password}</p>)}
+                <input
+                    type="password"
+                    className='border rounded-md'
+                    id='password'
+                    {...formik.getFieldProps('password')}
+                />
+                {formik.touched.password && formik.errors.password && (
+                    <p className='text-red-500'>{formik.errors.password}</p>
+                )}
             </label>
+
             <div>
-                <button type="submit" disabled={isSubmitting} className='p-3 rounded-md bg-blue-400 hover:bg-blue-500 text-white font-semibold'>Submit</button>
+                <button
+                    type="submit"
+                    disabled={formik.isSubmitting}
+                    className='p-3 rounded-md bg-blue-400 hover:bg-blue-500 text-white font-semibold'
+                >
+                    Submit
+                </button>
             </div>
         </form>
-    )
-}
-
+    );
+};
 
 Login.propTypes = {
-    setToken: PropTypes.func.isRequired
-}
+    setToken: PropTypes.func.isRequired,
+};
 
-export default Login
+export default Login;

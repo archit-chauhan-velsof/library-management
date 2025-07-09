@@ -1,16 +1,16 @@
 import {lazy,Suspense, useState} from 'react'
-import Booklist from '../Components/Booklist'
-import Studentlist from '../Components/Studentlist'
-import AddBook from '../Components/AddBook'
-// import Studentlist from '../Components/Studentlist'
-import ViewStudent from '../Components/ViewStudent'
+import Booklist from '../components/Booklist'
+import Studentlist from '../components/Studentlist'
+import AddBook from '../components/AddBook'
+// import Studentlist from '../components/Studentlist'
+import ViewStudent from '../components/ViewStudent'
 import App from '../App'
-import NotFound from '../Components/NotFound'
+import NotFound from '../components/NotFound'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 
 // lazy loading the user'sList as it uses API calls 
-const UsersList = lazy(() => import('../Components/Users/UsersList'));
+const UsersList = lazy(() => import('../components/Users/UsersList'));
 
 
 

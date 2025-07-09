@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import ReactPaginate from 'react-paginate';
-import items from '../../Data/studentsList.json';
+import items from '../data/studentsList.json';
 import { NavLink, useParams } from 'react-router-dom';
 import {itemsPerPage,pageRangeDisplayed} from '../config';
 

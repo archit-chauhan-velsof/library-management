@@ -47,11 +47,6 @@ const  Items = ({ currentItems }) => {
 const Booklist = () => {
   const items = useSelector((state) => state.books.books);
 
- 
-
-
-
-
   const [itemOffset, setItemOffset] = useState(0);
 
   // Simulate fetching items from another resources.
